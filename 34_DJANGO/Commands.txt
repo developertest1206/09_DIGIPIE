@@ -1,0 +1,455 @@
+Ctri+F :- Find something
+Ctrl+H :- Replace Finding word
+Windows PowerShell -> Right click -> Run as administrator -> Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -> Y
+Windows+S -> Credential Manager -> Windows Credentials -> Find GitHub entries (git:https://github.com) Remove/Delete it -> Go back to VS Code terminal -> git push -u origin main -> sign in with browser
+
+--------------------Setup PythonDjango Project---------------------------------
+
+STEP 1:- Create Main Folder
+        DjangoProject
+
+STEP 2:- Go to Terminal
+        ctrl + ~
+
+STEP 3:- Create Virtual Environment with name
+        py -m venv myenv
+
+	:- Delete the old virtual environment:-		Remove-Item -Recurse -Force .\myenv
+
+STEP 4:- Activate the Virtual Environment
+        .\myenv\Scripts\Activate
+
+STEP 5:- Install Django
+	pip install django djangorestframework djangorestframework-simplejwt pillow faker mysqlclient	/ 
+        pip install Django
+	pip install mysqlclient
+        pip install djangorestframework
+	pip install djangorestframework-simplejwt
+	pip install pillow
+	pip install faker
+
+STEP 6:- Create a new Django Project
+        1. py -m django startproject ProjectName 
+	2. py -m django startproject ProjectName .
+
+# STEP 7:- Navigate to the Project Folder
+        1. # cd .\ProjectName\ 
+	2. skip this step
+
+STEP 8:- Create a Django App
+        1. py -m django startapp AppName
+	2. py .\manage.py startapp AppName
+
+STEP 9:- Add the App to Settings File
+        Main Folder -> ProjectName -> Project -> Settings.py -> 
+	
+	https://www.aweber.com/users/campaigns
+
+	INSTALLED_APPS{ 
+		'rest_framework', 'rest_framework.authtoken', 'AppName'
+	}
+
+	
+	REST_FRAMEWORK = {
+    		'DEFAULT_AUTHENTICATION_CLASSES': 
+		[
+        		'rest_framework.authentication.BasicAuthentication',
+        		'rest_framework.authentication.SessionAuthentication',		OR
+			'rest_framework_simplejwt.authentication.JWTAuthentication'
+    		]
+	}
+
+
+SIMPLE_JWT = 
+{
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
+
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "VERIFYING_KEY": "",
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "JSON_ENCODER": None,
+    "JWK_URL": None,
+    "LEEWAY": 0,
+
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+
+    "JTI_CLAIM": "jti",
+
+    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
+
+    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
+    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
+    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
+    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
+    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
+    "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+}
+
+
+	DATABASES = {
+    	'default': {
+        	'ENGINE': 'django.db.backends.mysql',
+        	'NAME': 'ecommerce',         # Replace with your MySQL DB name
+        	'USER': 'root',         # Replace with your MySQL username
+        	'PASSWORD': 'Dr@shti12', # Replace with your MySQL password
+        	'HOST': 'localhost',            # Or use IP address of MySQL server
+        	'PORT': '3306',                 # Default MySQL port
+    		}
+	}
+
+	# Default primary key field type
+	# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+	DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+	# URL path used to access static files like CSS, JS, and images
+	# https://docs.djangoproject.com/en/5.2/howto/static-files/
+	STATIC_URL = 'static/'
+
+	# The directory where static files are collected
+	# Folders where Django will look for project-level static files
+	STATICFILES_DIRS = [BASE_DIR / 'static',]
+
+	# URL path used to access user-uploaded media files
+	MEDIA_URL = '/media/'
+
+	# File system location where uploaded media files will be stored
+	MEDIA_ROOT = BASE_DIR / 'media'
+
+
+STEP 10:- Views.py For Authentication django rest framework
+	views.py -> api secure karva mate
+	from django.shortcuts import render              # Renders HTML templates with context data
+	from django.shortcuts import redirect   # Redirects user to another URL or view
+	from django.http import HttpResponse, JsonResponse  # Sends plain text or JSON HTTP responses
+	from rest_framework.response import Response     # Sends API responses in JSON format
+	from rest_framework.decorators import api_view   # Converts function-based views into DRF APIs
+	from rest_framework.views import APIView          # Base class for class-based DRF APIs
+	from rest_framework.authentication import SessionAuthentication, BasicAuthentication  
+		# Handles user authentication using sessions and basic auth
+	from rest_framework.permissions import IsAuthenticated  
+		# Allows access only to authenticated (logged-in) users
+
+
+						OR
+	from rest_framework_simplejwt.authentication import JWTAuthentication
+	from rest_framework.permissions import IsAuthenticated
+
+	authentication_classes = [SessionAuthentication, BasicAuthentication]
+	permission_classes = [IsAuthenticated]						OR
+	authentication_classes = [JWTAuthentication]
+    	permission_classes = [IsAuthenticated]
+
+
+STEP 11:- Copy urls.py for AppName
+        Main Folder -> ProjectName -> Project -> Copy urls.py -> Paste On -> AppName -> urls.py
+
+STEP 12:- Changes in Project urls.py
+            from django.contrib import admin
+            from django.urls import path, include
+
+            urlpatterns = [
+                path('admin/', admin.site.urls),
+                path('',include("myapp.urls"))
+            ]
+
+STEP 13:- Changes in AppName urls.py
+            from django.urls import path
+            from myapp.views import *
+	    from django.conf import settings
+	    from django.conf.urls.static import static
+	    from rest_framework.authtoken import views			OR
+	    from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView)
+
+            urlpatterns = [
+                path('',home,name='home'),
+
+		path('api-token-auth/', views.obtain_auth_token), 			OR
+
+    		path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    		path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+            ]
+
+	    if settings.DEBUG:
+    		urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+		
+
+STEP 14:- Create templates folder for html File
+        Main Folder -> ProjectName -> AppName -> Create Folder templates
+
+STEP 15:- Create data.py file for fake data
+        Main Folder -> ProjectName -> AppName -> Create file data.py
+
+STEP 16:- Create serializer.py file for ..........
+        Main Folder -> ProjectName -> AppName -> Create file serializer.py
+
+STEP 17:- Create Static Folder for CSS, IMG, JS
+        Main Folder -> ProjectName -> Create Folder Static
+
+STEP 18:- Run Makemigrations. It's like creating blueprint for database changes
+        py .\manage.py makemigrations
+
+STEP 19:- Run Migrate. This actually applies changes to the Datatbase.
+        py .\manage.py Migrate
+
+STEP 20:- Create an admin (superuser) account
+        py .\manage.py createsuperuser
+
+STEP 21:- Define Models(Creat Table) 
+        Main Folder -> ProjectName -> AppName -> models.py -> Create Tables
+	
+	from django.contrib.auth.models import User
+	from django.db import models
+
+STEP 22:- convert all venv library file in one file
+	pip freeze > requirements.txt
+
+
+--------------------Useful Extra Command and Description---------------------------------
+
+1. Lists all migrations and their applied status
+py .\manage.py showmigrations	
+
+2. Shows raw SQL for a specific migration
+py .\manage.py sqlmigrate myapp 0001	
+
+3. Marks migration as done without applying changes
+py .\manage.py migrate --fake	
+
+4. Rolls back all migrations for that app
+py .\manage.py migrate myapp zero	
+
+5. Launches interactive shell with Django project loaded. Test queries, debug, create test data, run logic.
+py .\manage.py shell
+
+6. changepassword username	Change the password for a user
+py .\manage.py changepassword username
+
+7. Collect all static files into one directory (for production)
+py .\manage.py collectstatic
+
+
+
+
+
+
+=========================Django ORM all querys on official website(https://docs.djangoproject.com/en/5.1/topics/db/queries/)================================
+
+=========================Django ORM Methods with Uses================================
+
+---------------------------1. Creating Data------------------------------------
+create(): Creates and saves a new object in one step.
+Example: Student.objects.create(name="Alice", age=22)
+save(): Saves the current instance to the database.
+Example: s = Student(name="Bob"); s.save()
+
+---------------------------2. Reading Data (Querying)------------------------------------
+all(): Returns all records.
+Example: Student.objects.all()
+
+filter(**kwargs): Returns matching records.
+Example: Student.objects.filter(age=22)
+
+exclude(**kwargs): Returns non-matching records.
+Example: Student.objects.exclude(age=22)
+
+get(**kwargs): Returns single matching object or raises DoesNotExist.
+Example: Student.objects.get(id=1)
+
+first(): Returns the first object from a queryset.
+Example: Student.objects.all().first()
+
+last(): Returns the last object from a queryset.
+Example: Student.objects.all().last()
+
+count(): Returns number of objects in queryset.
+Example: Student.objects.count()
+
+exists(): Returns True if records exist.
+Example: Student.objects.filter(age=22).exists()
+
+values(): Returns dictionaries instead of model instances.
+Example: Student.objects.values('name', 'age')
+
+values_list(): Returns tuples instead of model instances.
+Example: Student.objects.values_list('name', flat=True)
+
+order_by(): Orders queryset.
+Example: Student.objects.order_by('name')
+
+distinct(): Removes duplicates.
+Example: Student.objects.values('age').distinct()
+
+---------------------------3. Updating Data------------------------------------
+update(): Bulk update matching records.
+Example: Student.objects.filter(age=22).update(age=23)
+save(): Updates a single object after changing its fields.
+Example: s.age = 25; s.save()
+
+---------------------------4. Deleting Data------------------------------------
+delete(): Deletes an object or queryset.
+Example: Student.objects.get(id=1).delete()
+Example: Student.objects.filter(age=25).delete()
+
+---------------------------5. Complex Lookups (using Q)------------------------------------
+OR condition:
+from django.db.models import Q
+Student.objects.filter(Q(age=20) | Q(name='Alice'))
+AND condition:
+Student.objects.filter(Q(age=20) & Q(name='Alice'))
+NOT condition:
+Student.objects.filter(~Q(age=20))
+
+---------------------------6. Related Models (ForeignKey, OneToOne, ManyToMany)------------------------------------
+Access related objects:
+student.course (OneToOne or ForeignKey)
+course.student_set.all() (Reverse lookup)
+
+---------------------------7. Aggregation and Annotation------------------------------------
+aggregate():
+from django.db.models import Avg, Sum
+Student.objects.aggregate(Avg('age'))
+annotate():
+Course.objects.annotate(student_count=Count('student'))
+
+---------------------------8. Raw SQL (when needed)------------------------------------
+raw():
+Student.objects.raw('SELECT * FROM app_student')
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+(myenv) PS C:\PYTHON_PROGRAM\PYTHON_FRAMEWORK\30_Static_Models_ORM\Project> **********py .\manage.py shell****************
+8 objects imported automatically (use -v 2 for details).
+
+Python 3.10.7 (tags/v3.10.7:6cc6b13, Sep  5 2022, 14:08:36) [MSC v.1933 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from myapp.models import *
+>>> Student.objects.all()
+<QuerySet [<Student: Student object (1)>, <Student: Student object (2)>, <Student: Student object (3)>, <Student: Student object (4)>, <Student: Student object (5)>]>
+>>> st = Student(username="Kunjan", email="kunjan@gmail.com", phone="9094231245", age=22)
+>>> st.save()
+>>> Student.objects.all()                                                                 
+<QuerySet [<Student: Student object (1)>, <Student: Student object (2)>, <Student: Student object (3)>, <Student: Student object (4)>, <Student: Student object (5)>, <Student: Student object (6)>]>
+>>> Student.objects.create(username="Prince", email="prince@gmail.com", phone="9871234578", age=24)
+<Student: Student object (7)>
+>>> Student.objects.all()                                                                           
+<QuerySet [<Student: Student object (1)>, <Student: Student object (2)>, <Student: Student object (3)>, <Student: Student object (4)>, <Student: Student object (5)>, <Student: Student object (6)>, <Student: Student object (7)>]>
+>>> st = Student.objects.get(id=1)
+>>> st.username="Drashti Modi"
+>>> st.save()
+>>> st.delete(id=7)
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+TypeError: Model.delete() got an unexpected keyword argument 'id'
+>>> st.delete()
+(1, {'myapp.Student': 1})
+>>> Student.objects.filter(age=21) 
+<QuerySet []>
+>>> st.username="Drashti Modi"
+>>> st.save()
+>>> st.delete(id=7)
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+TypeError: Model.delete() got an unexpected keyword argument 'id'
+>>> st.delete()
+(1, {'myapp.Student': 1})
+>>> Student.objects.filter(age=21)
+<QuerySet []>
+>>> Student.objects.filter(age=22)
+<QuerySet [<Student: Student object (4)>, <Student: Student object (6)>]>
+>>> Student.objects.filter(username__startswith="S")
+<QuerySet [<Student: Student object (3)>]>
+>>> Student.objects.filter(age__gt=22)
+<QuerySet [<Student: Student object (2)>, <Student: Student object (3)>, <Student: Student object (7)>]>
+>>> st.save()
+>>> st.delete(id=7)
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+TypeError: Model.delete() got an unexpected keyword argument 'id'
+>>> st.delete()
+(1, {'myapp.Student': 1})
+>>> Student.objects.filter(age=21)
+<QuerySet []>
+>>> st.delete()
+(1, {'myapp.Student': 1})
+>>> Student.objects.filter(age=21)
+<QuerySet []>
+>>> Student.objects.filter(age=21)
+<QuerySet []>
+>>> Student.objects.filter(age=22)
+<QuerySet [<Student: Student object (4)>, <Student: Student object (6)>]>
+>>> Student.objects.filter(username__startswith="S")
+<QuerySet [<Student: Student object (3)>]>
+>>> Student.objects.filter(age__gt=22)
+<QuerySet [<Student: Student object (2)>, <Student: Student object (3)>, <Student: Student object (7)>]>
+>>> Student.objects.filter(age__gte=22)
+<QuerySet [<Student: Student object (2)>, <Student: Student object (3)>, <Student: Student object (4)>, <Student: Student object (6)>, <Student: Student object (7)>]>
+>>> Student.objects.all()[5:10]
+<QuerySet [<Student: Student object (7)>, <Student: Student object (8)>, <Student: Student object (9)>, <Student: Student object (10)>, <Student: Student object (11)>]>
+>>> Student.objects.all().order_by("username")
+<QuerySet [<Student: Student object (27)>, <Student: Student object (16)>, <Student: Student object (23)>, <Student: Student object (20)>, <Student: 
+Student object (22)>, <Student: Student object (4)>, <Student: Student object (5)>, <Student: Student object (18)>, <Student: Student object (19)>, <Student: Student object (15)>, <Student: Student object (11)>, <Student: Student object (6)>, <Student: Student object (10)>, <Student: Student object (8)>, <Student: Student object (25)>, <Student: Student object (14)>, <Student: Student object (7)>, <Student: Student object (12)>, <Student: Student object (17)>, <Student: Student object (21)>, '...(remaining elements truncated)...']>
+>>>
+>>> exit()
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+(myenv) PS C:\PYTHON_PROGRAM\PYTHON_FRAMEWORK\30_Static_Models_ORM\Project> py .\manage.py shell
+Python 3.10.7 (tags/v3.10.7:6cc6b13, Sep  5 2022, 14:08:36) [MSC v.1933 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from myapp import data
+>>> exit()
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+Token Authentication Link:- https://www.django-rest-framework.org/api-guide/authentication/#setting-the-authentication-scheme
+Simple JWT Token:- https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html,
+			https://medium.com/django-unleashed/securing-django-rest-apis-with-jwt-authentication-using-simple-jwt-a-step-by-step-guide-28efa84666fe
+Check Token:- https://jwt.io/
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+SMS:- https://www.fast2sms.com/dashboard/quick
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+Payment Gateway:- 
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+Email Sending:- https://www.geeksforgeeks.org/python/setup-sending-email-in-django-project/
+Settings.py :-  EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+		EMAIL_HOST = "smtp.gmail.com"
+		EMAIL_USE_TLS = True
+		EMAIL_PORT = 587
+		EMAIL_HOST_USER = "drashtimodi33@gmail.com"
+		EMAIL_HOST_PASSWORD = "wrcc oumk hwcx tjwj"
+EMAIL_HOST_PASSWORD:- Google Account Security -> 2-Step Verification is turned on
+		   :- Security -> App passwords -> Google will generate a 16-character password.
+
+	
