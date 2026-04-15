@@ -13,4 +13,3 @@ def get_product():
 def get_product_by_id(product_id : int):
     return {"id" : product_id}
 
-
