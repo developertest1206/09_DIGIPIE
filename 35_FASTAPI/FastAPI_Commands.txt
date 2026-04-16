@@ -1,10 +1,28 @@
 FastAPI Documentation: https://fastapi.tiangolo.com/
 Uvicorn: https://uvicorn.dev/
 Pydentic: https://pydantic.dev/docs/validation/latest/get-started/
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+fastapi-crud/
+│
+├── main.py              # Entry point (start app)
+├── database.py          # Fake DB / later real DB
+├── schemas.py           # Request & Response models
+│
+├── routers/             # All API routes
+│   └── user.py
+│
+└── services/            # Business logic (important!)
+    └── user_service.py
+
+Rule:
+Router = request handle
+Service = logic handle
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 run .py file : uvicorn FileName:app --reload
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 PostgreSQL Installation Directory: C:\Program Files\PostgreSQL\18
 PostgreSQL Data Directory: C:\Program Files\PostgreSQL\18\data
