@@ -26,5 +26,6 @@ run .py file : uvicorn FileName:app --reload
 
 PostgreSQL Installation Directory: C:\Program Files\PostgreSQL\18
 PostgreSQL Data Directory: C:\Program Files\PostgreSQL\18\data
+User: postgres
 Password: admin123
 Port: 5432
