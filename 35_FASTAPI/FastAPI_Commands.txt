@@ -29,3 +29,9 @@ PostgreSQL Data Directory: C:\Program Files\PostgreSQL\18\data
 User: postgres
 Password: admin123
 Port: 5432
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+MySQL Installation Directory: C:\ProgramData\MySQL\MySQL Server 9.6\
+Port: 3306
+Password: admin123

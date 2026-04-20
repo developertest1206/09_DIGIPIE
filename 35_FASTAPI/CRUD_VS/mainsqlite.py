@@ -7,9 +7,7 @@ from typing import List
 # ------------------ Model ------------------
 # This class is used to create a table in the database
 class User(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)  
-    # id is primary key and auto increases
-
+    id: Optional[int] = Field(default=None, primary_key=True)  # id is primary key and auto increases
     name: str        # user name (required)
     email: str       # user email (required)
     is_active: bool = False   # default value is False
