@@ -11,7 +11,7 @@ PostgreSQL_DB_URL = "postgresql://postgres:admin123@localhost:5432/FastAPI_DB"
 
 # ------------------ Model ------------------
 # This class = table in database (same like SQLite table)
-class Item(SQLModel, table=True):
+class mainpostgresql(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)  # id is primary key and auto increases
     name: str        # user name (required)
     email: str       # user email (required)
@@ -43,61 +43,61 @@ app = FastAPI(lifespan=lifespan)
 
 # ------------------ Routes ------------------
 
-# ✅ GET ALL ITEMS (GET)
-@app.get("/items/", response_model=List[Item])
-def read_items():
+# ✅ GET ALL User (GET)
+@app.get("/user/", response_model=List[mainpostgresql])
+def read_user():
     with Session(engine) as session:
-        items = session.exec(select(Item)).all()  # get all data
-        return items
+        user = session.exec(select(mainpostgresql)).all()  # get all data
+        return user
 
-# ✅ GET ITEM BY ID
-@app.get("/items/{item_id}", response_model=Item)
-def read_item(item_id: int):
+# ✅ GET User BY ID
+@app.get("/user/{user_id}", response_model=mainpostgresql)
+def read_user(user_id: int):
     with Session(engine) as session:
-        item = session.get(Item, item_id)  # find item by id
-        if not item:
-            raise HTTPException(status_code=404, detail="Item not found")
-        return item
+        user = session.get(mainpostgresql, user_id)  # find mainpostgresql by id
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return user
 
-# ✅ CREATE ITEM (POST)
-@app.post("/items/", response_model=Item)
-def create_item(item: Item):
+# ✅ CREATE User (POST)
+@app.post("/user/", response_model=mainpostgresql)
+def create_item(user: mainpostgresql):
     with Session(engine) as session:
-        session.add(item)     # add data to DB
+        session.add(user)     # add data to DB
         session.commit()      # save changes
-        session.refresh(item) # get updated data (id etc.)
-        return item
+        session.refresh(user) # get updated data (id etc.)
+        return user
 
-# ✅ UPDATE ITEM (PUT)
-@app.put("/items/{item_id}", response_model=Item)
-def update_item(item_id: int, updated_item: Item):
+# ✅ UPDATE User (PUT)
+@app.put("/user/{user_id}", response_model=mainpostgresql)
+def update_item(user_id: int, updated_user: mainpostgresql):
     with Session(engine) as session:
-        item = session.get(Item, item_id)  # find item
-        if not item:
-            raise HTTPException(status_code=404, detail="Item not found")
+        user = session.get(mainpostgresql, user_id)  # find user
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
 
         # update values
-        item.name = updated_item.name
-        item.email = updated_item.email
-        item.is_active = updated_item.is_active
+        user.name = updated_user.name
+        user.email = updated_user.email
+        user.is_active = updated_user.is_active
 
-        session.add(item)     # save updated data
+        session.add(user)     # save updated data
         session.commit()
-        session.refresh(item)
+        session.refresh(user)
 
-        return item
+        return user
 
 
-# ✅ DELETE ITEM
-@app.delete("/items/{item_id}")
-def delete_item(item_id: int):
+# ✅ DELETE User
+@app.delete("/user/{user_id}")
+def delete_item(user_id: int):
     with Session(engine) as session:
-        item = session.get(Item, item_id)  # find item
+        user = session.get(user, user_id)  # find user
 
-        if not item:
-            raise HTTPException(status_code=404, detail="Item not found")
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
 
-        session.delete(item)   # delete from DB
+        session.delete(user)   # delete from DB
         session.commit()
 
-        return {"message": "Item deleted successfully"}
+        return {"message": "User deleted successfully"}

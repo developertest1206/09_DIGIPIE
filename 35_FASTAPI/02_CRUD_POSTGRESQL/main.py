@@ -1,19 +1,20 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from contextlib import asynccontextmanager
 
 from db import get_db, engine, Base
-from models import UserDB
+from models import UserDB   
 from schemas import UserCreate, UserResponse
 
+
 # ------------------------------
-# Lifespan (Modern FastAPI)
+# Lifespan (runs on start/stop)
 # ------------------------------
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("🚀 App starting...")
 
-    # Create tables (only if not exist)
+    # Create tables in DB
     Base.metadata.create_all(bind=engine)
 
     yield
@@ -21,8 +22,10 @@ async def lifespan(app: FastAPI):
     print("🛑 App shutting down...")
 
 # ------------------------------
-# FastAPI App
+# Create FastAPI app
 # ------------------------------
+# lifespan=lifespan tells FastAPI to use the lifespan function we defined above to manage startup and shutdown events. 
+# This allows us to perform any necessary setup (like creating database tables) when the app starts, and cleanup when it stops.
 app = FastAPI(lifespan=lifespan)
 
 
@@ -31,17 +34,12 @@ app = FastAPI(lifespan=lifespan)
 # ------------------------------
 @app.post("/users", response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    # create DB object
-    new_user = UserDB(name=user.name, age=user.age)
+    
+    new_user = UserDB(name=user.name, age=user.age)  # create object
 
-    # add to DB
-    db.add(new_user)
-
-    # save changes
-    db.commit()
-
-    # refresh to get ID
-    db.refresh(new_user)
+    db.add(new_user)     # add to DB
+    db.commit()          # save changes
+    db.refresh(new_user) # get updated data (id)
 
     return new_user
 
@@ -59,20 +57,26 @@ def get_users(db: Session = Depends(get_db)):
 # ------------------------------
 @app.get("/users/{user_id}", response_model=UserResponse)
 def get_user(user_id: int, db: Session = Depends(get_db)):
-    return db.query(UserDB).filter(UserDB.id == user_id).first()
+    
+    user = db.query(UserDB).filter(UserDB.id == user_id).first()
 
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user
 
 # ------------------------------
 # DELETE USER
 # ------------------------------
 @app.delete("/users/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
-    user = db.query(UserDB).filter(UserDB.id == user_id).first()
     
+    user = db.query(UserDB).filter(UserDB.id == user_id).first()
+
     if not user:
-        return {"error": "User not found"}
+        raise HTTPException(status_code=404, detail="User not found")
 
     db.delete(user)
     db.commit()
 
-    return {"message": "User deleted"}
+    return {"message": "User deleted successfully"}

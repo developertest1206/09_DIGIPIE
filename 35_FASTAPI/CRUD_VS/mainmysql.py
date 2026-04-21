@@ -13,7 +13,7 @@ DATABASE_URL = "mysql+pymysql://root:root@localhost:3306/FastAPI_DB"
 
 # ------------------ MODEL ------------------
 # This class will create a table in MySQL
-class User(SQLModel, table=True):
+class mainmysql(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)   # id = primary key, auto increment
     name: str        # user name
     email: str       # user email
@@ -44,29 +44,29 @@ app = FastAPI(lifespan=lifespan)
 
 # ------------------ ROUTES ------------------
 
-# ✅ CREATE ITEM
-@app.post("/items/", response_model=User)
-def create_item(item: User):
+# ✅ CREATE USER
+@app.post("/user/", response_model=mainmysql)
+def create_users(user: mainmysql):
     with Session(engine) as session:
-        session.add(item)     # add data
+        session.add(user)     # add data
         session.commit()      # save
-        session.refresh(item) # get id
-        return item
+        session.refresh(user) # get id
+        return user
 
 
-# ✅ GET ALL ITEMS
-@app.get("/items/", response_model=List[User])
-def read_items():
+# ✅ GET ALL USER
+@app.get("/users/", response_model=List[mainmysql])
+def read_users():
     with Session(engine) as session:
-        users = session.exec(select(User)).all()
+        users = session.exec(select(mainmysql)).all()
         return users
 
 
-# ✅ GET ITEM BY ID
-@app.get("/items/{item_id}", response_model=User)
-def read_item(item_id: int):
+# ✅ GET USER BY ID
+@app.get("/user/{user_id}", response_model=mainmysql)
+def read_users(user_id: int):
     with Session(engine) as session:
-        users = session.get(User, item_id)
+        users = session.get(mainmysql, user_id)
 
         if not users:
             raise HTTPException(status_code=404, detail="User not found")
@@ -74,18 +74,18 @@ def read_item(item_id: int):
         return users
 
 
-# ✅ UPDATE ITEM
-@app.put("/items/{item_id}", response_model=User)
-def update_item(item_id: int, updated_item: User):
+# ✅ UPDATE USER
+@app.put("/user/{user_id}", response_model=mainmysql)
+def update_users(user_id: int, updated_user: mainmysql):
     with Session(engine) as session:
-        user = session.get(User, item_id)
+        user = session.get(mainmysql, user_id)
 
         if not user:
-            raise HTTPException(status_code=404, detail="Item not found")
+            raise HTTPException(status_code=404, detail="User not found")
 
-        user.name = updated_item.name
-        user.email = updated_item.email
-        user.is_active = updated_item.is_active
+        user.name = updated_user.name
+        user.email = updated_user.email
+        user.is_active = updated_user.is_active
 
         session.add(user)
         session.commit()
@@ -94,11 +94,11 @@ def update_item(item_id: int, updated_item: User):
         return user
 
 
-# ✅ DELETE ITEM
-@app.delete("/items/{item_id}")
-def delete_item(item_id: int):
+# ✅ DELETE USER
+@app.delete("/user/{user_id}")
+def delete_users(user_id: int):
     with Session(engine) as session:
-        user = session.get(User, item_id)
+        user = session.get(mainmysql, user_id)
 
         if not user:
             raise HTTPException(status_code=404, detail="User not found")

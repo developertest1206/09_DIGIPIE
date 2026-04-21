@@ -6,7 +6,7 @@ from db import Base
 # User Table
 # ------------------------------
 class UserDB(Base):
-    __tablename__ = "02_users"   # table name
+    __tablename__ = "crud_postgresql_users"   # table name
 
     id = Column(Integer, primary_key=True, index=True)  # unique id
     name = Column(String)     # user name

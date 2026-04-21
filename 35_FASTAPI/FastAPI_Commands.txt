@@ -94,3 +94,9 @@ SUCCESS: The process with PID 12504 has been terminated.
 SUCCESS: The process with PID 14228 has been terminated.
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+convert all venv library file in one file
+	pip freeze > requirements.txt
+
+
+
