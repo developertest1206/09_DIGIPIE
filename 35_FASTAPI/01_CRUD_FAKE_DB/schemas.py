@@ -1,17 +1,18 @@
-from pydantic import BaseModel, EmailStr        # Importing BaseModel and EmailStr from Pydantic library
+# pydantic models for request validation and response formatting
+from pydantic import BaseModel, EmailStr
 
-# Data coming from client (POST)
-class UserCreate(BaseModel):        
-    name: str               # name is a string
-    email: EmailStr         # email is a string that must be a valid email address
-
-# Data coming from client (PUT)
-class UserUpdate(BaseModel):
+# Data from client (POST)
+class UserCreate(BaseModel):
     name: str
     email: EmailStr
 
-# Data going back to client (response)
+# Response data
 class UserResponse(BaseModel):
     id: int
+    name: str
+    email: EmailStr
+
+# Data for update (PUT)
+class UserUpdate(BaseModel):
     name: str
     email: EmailStr

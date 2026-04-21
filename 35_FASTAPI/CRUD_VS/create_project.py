@@ -1,7 +1,7 @@
 import os
 
 # 👉 Target project folder
-base_path = "D:/09_DIGIPIE/35_FASTAPI/02_CRUD_POSTGRESQL"   # go outside CRUD → into 
+base_path = "D:/09_DIGIPIE/35_FASTAPI/05_AUTHENTICATION"   # go outside CRUD → into 
 
 folders = [
     "crud",
