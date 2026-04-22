@@ -13,7 +13,7 @@ DATABASE_URL = "mysql+pymysql://root:root@localhost:3306/FastAPI_DB"
 
 # ------------------ MODEL ------------------
 # This class will create a table in MySQL
-class mainmysql(SQLModel, table=True):
+class mainmysql_user(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)   # id = primary key, auto increment
     name: str        # user name
     email: str       # user email
@@ -45,8 +45,8 @@ app = FastAPI(lifespan=lifespan)
 # ------------------ ROUTES ------------------
 
 # ✅ CREATE USER
-@app.post("/user/", response_model=mainmysql)
-def create_users(user: mainmysql):
+@app.post("/user/", response_model=mainmysql_user)
+def create_users(user: mainmysql_user):
     with Session(engine) as session:
         session.add(user)     # add data
         session.commit()      # save
@@ -55,18 +55,18 @@ def create_users(user: mainmysql):
 
 
 # ✅ GET ALL USER
-@app.get("/users/", response_model=List[mainmysql])
+@app.get("/users/", response_model=List[mainmysql_user])
 def read_users():
     with Session(engine) as session:
-        users = session.exec(select(mainmysql)).all()
+        users = session.exec(select(mainmysql_user)).all()
         return users
 
 
 # ✅ GET USER BY ID
-@app.get("/user/{user_id}", response_model=mainmysql)
+@app.get("/user/{user_id}", response_model=mainmysql_user)
 def read_users(user_id: int):
     with Session(engine) as session:
-        users = session.get(mainmysql, user_id)
+        users = session.get(mainmysql_user, user_id)
 
         if not users:
             raise HTTPException(status_code=404, detail="User not found")
@@ -75,10 +75,10 @@ def read_users(user_id: int):
 
 
 # ✅ UPDATE USER
-@app.put("/user/{user_id}", response_model=mainmysql)
-def update_users(user_id: int, updated_user: mainmysql):
+@app.put("/user/{user_id}", response_model=mainmysql_user)
+def update_users(user_id: int, updated_user: mainmysql_user):
     with Session(engine) as session:
-        user = session.get(mainmysql, user_id)
+        user = session.get(mainmysql_user, user_id)
 
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
@@ -98,7 +98,7 @@ def update_users(user_id: int, updated_user: mainmysql):
 @app.delete("/user/{user_id}")
 def delete_users(user_id: int):
     with Session(engine) as session:
-        user = session.get(mainmysql, user_id)
+        user = session.get(mainmysql_user, user_id)
 
         if not user:
             raise HTTPException(status_code=404, detail="User not found")

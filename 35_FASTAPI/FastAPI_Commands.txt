@@ -98,5 +98,84 @@ SUCCESS: The process with PID 14228 has been terminated.
 convert all venv library file in one file
 	pip freeze > requirements.txt
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+
+🟢 5. Path & Query Parameters
+Path parameter (/users/{id})
+Query parameter (?name=abc)
+Optional parameters
+🟢 6. Request Body (Pydantic)
+What is Pydantic
+Create schema using BaseModel
+Data validation
+Input JSON
+🟢 7. Response Model
+Return data using schema
+response_model
+Hide sensitive data (like password)
+🟢 8. Status Codes
+200, 201, 400, 404, 500
+Custom status codes
+🟢 9. Error Handling
+HTTPException
+Custom error messages
+Validation errors
+🟢 10. Project Structure
+main.py
+routers/
+models.py
+schemas.py
+database.py
+🟢 11. APIRouter
+Split code into files
+Use router
+Include in main.py
+🟢 12. Dependency Injection
+Depends()
+get_db()
+Reusable logic
+🟢 13. Database Connection
+SQLAlchemy basics
+engine, Session, Base
+Connect PostgreSQL / SQLite
+🟢 14. Models (ORM)
+Create tables
+Columns
+Data types
+🟢 15. Schemas
+Input schema
+Output schema
+orm_mode
+🟢 16. CRUD Operations 🔥
+Create
+Read
+Update
+Delete
+🟢 17. Middleware
+What is middleware
+Logging
+Request/response control
+🟢 18. CORS
+Why needed
+Connect frontend
+🟢 19. Authentication (IMPORTANT 🔐)
+Basic login
+Password hashing
+JWT token
+🟢 20. Security
+Hash passwords
+Protect routes
+Token validation
+🟢 21. File Upload
+Upload files
+Save files
+🟢 22. Background Tasks
+Run tasks in background
+🟢 23. Testing API
+Swagger UI (/docs)
+Postman
+🟢 24. Deployment (Basic)
+Run on server
+Use Docker (optional)
