@@ -1,143 +1,100 @@
 # ------------------ IMPORTS ------------------
-from fastapi import FastAPI, HTTPException   # FastAPI for API, HTTPException for errors
-from passlib.context import CryptContext     # Used to hash and verify passwords
+from fastapi import FastAPI, HTTPException, Depends     # FastAPI for API, HTTPException for errors
+from sqlalchemy.orm import Session
+from passlib.context import CryptContext                # Used to hash and verify passwords
 
-from db import database, metadata, engine    # Database connection and table setup
-from models import employee                  # Employee table
-from schemas import Employee, EmployeeLogin, EmployeeUpdate  # Request models
+from db import engine, Base, get_db   # Database connection and table setup
+from models import Employee           # Employee table
+from schemas import Employee as EmployeeSchema, EmployeeLogin, EmployeeUpdate   # Request models
 
+# ------------------ APP ------------------
 app = FastAPI()     # Create FastAPI instance
 
-# Create table in MySQL if not exists
-metadata.create_all(engine)
+# ------------------ CREATE TABLE ------------------
+# This will create table in MySQL if it doesn't exist
+Base.metadata.create_all(bind=engine)
 
-# Password hashing setup (for security)
+# ------------------ PASSWORD SECURITY ------------------
+# This is used to encrypt (hide) passwords (for security)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-# -----------------------------------------
-# Event handlers for startup and shutdown to manage database connection
-# -----------------------------------------
-@app.on_event("startup")
-async def startup():
-    await database.connect()
+# =========================================================
+# ===================== ROUTES =============================
+# =========================================================
 
-@app.on_event("shutdown")
-async def shutdown():
-    await database.disconnect()
-
-
-# -----------------------------------------
-# API endpoints for registration and login
-# -----------------------------------------
-# Endpoint to get all employees (for testing purposes)
+# ✅ GET ALL EMPLOYEES
 @app.get("/employees")
-async def get_employees():
-    try:
-        query = employee.select()     # Select all records from the employee table
-        return await database.fetch_all(query)   # Fetch and return all employee records as a list of dictionaries
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def get_employees(db: Session = Depends(get_db)):
+    employees = db.query(Employee).all()
+    return employees
 
-# Endpoint to get a specific employee by name (for testing purposes)
+
+# ✅ GET EMPLOYEE BY NAME
 @app.get("/employees/{employee_name}")
-async def get_employee(employee_name: str):
-    try: 
-        query = employee.select().where(employee.c.name == employee_name)   # Select employee record where name matches the provided employee_name
-        result = await database.fetch_one(query)    # Fetch one record that matches the employee_name
+def get_employee(employee_name: str, db: Session = Depends(get_db)):
+    employee = db.query(Employee).filter(Employee.name == employee_name).first()
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+    return employee
 
-        # If a record is found, return it. Otherwise, raise a 404 error indicating that the employee was not found
-        if result:
-            return result    # Return the employee record if found
-        else:
-            raise HTTPException(status_code=404, detail="Employee not found")   # Raise a 404 error if employee is not found
-        
-    # Catch any exceptions and return a 500 error with the exception message
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))   
-
+# ✅ REGISTER (CREATE USER)
 @app.post("/register")
-async def register(emp: Employee):
-    try:
-        query = employee.select().where(employee.c.name == emp.username)         # Check if username already exists
-        existing_employee = await database.fetch_one(query)                     # Fetch one record that matches the username
+def register(emp: EmployeeSchema, db: Session = Depends(get_db)):
+    # Check if username already exists
+    existing = db.query(Employee).filter(Employee.name == emp.username).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Username already exists")
+    # Hash password (secure)
+    hashed_password = pwd_context.hash(emp.password)
 
-        # If username already exists, raise an error
-        if existing_employee:
-            raise HTTPException(status_code=400, detail="Username already exists")
+    # Create new employee object
+    new_employee = Employee(
+        name=emp.username,
+        password=hashed_password
+    )
+    db.add(new_employee)
+    db.commit()
+    db.refresh(new_employee)
+    return {"message": "Employee registered successfully"}
 
-        # Hash the password before storing it in the database for security
-        hashed_password = pwd_context.hash(emp.password)            
-        query = employee.insert().values(name=emp.username, password=hashed_password)       # Insert new employee record into the database
-        
-        # Execute the query to insert the new employee and return a success message
-        await database.execute(query)
-        return {"message": "Employee registered successfully"}
-    
-    # Catch any exceptions that occur during the registration process and return a 500 error with the exception message
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
 
+# ✅ LOGIN
 @app.post("/login")
-async def login(emp: EmployeeLogin):
-    try:
-        # Fetch the employee record from the database based on the provided username to verify the password
-        query = employee.select().where(employee.c.name == emp.username)
-        existing_employee = await database.fetch_one(query)
-
-        # If username does not exist or password does not match, raise an error. Otherwise, return a success message
-        if not existing_employee:
-            raise HTTPException(status_code=400, detail="Invalid username or password")
-        else:
-            if not pwd_context.verify(emp.password, existing_employee["password"]):
-                raise HTTPException(status_code=400, detail="Invalid username or password")
-            return {"message": "Login successful"}
-        
-    # Catch any exceptions that occur during the login process and return a 500 error with the exception message
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def login(emp: EmployeeLogin, db: Session = Depends(get_db)):
+    employee = db.query(Employee).filter(Employee.name == emp.username).first()
+    if not employee:
+        raise HTTPException(status_code=400, detail="Invalid username or password")
     
+    # Check password
+    if not pwd_context.verify(emp.password, employee.password):
+        raise HTTPException(status_code=400, detail="Invalid username or password")
+    return {"message": "Login successful"}
+
+
+# ✅ UPDATE EMPLOYEE
 @app.put("/employees/{employee_name}")
-async def update_employee(employee_name: str, emp: EmployeeUpdate):
-    try:
-        # Fetch the employee record from the database based on the provided name
-        query = employee.select().where(employee.c.name == employee_name)
-        existing_employee = await database.fetch_one(query)
+def update_employee(employee_name: str, emp: EmployeeUpdate, db: Session = Depends(get_db)):
+    employee = db.query(Employee).filter(Employee.name == employee_name).first()
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+    # Update name
+    employee.name = emp.username
 
-        if not existing_employee:
-            raise HTTPException(status_code=404, detail="Employee not found")
+    # Update password (if given)
+    if emp.password:
+        employee.password = pwd_context.hash(emp.password)
+    db.commit()
+    db.refresh(employee)
+    return {"message": "Employee updated successfully"}
 
-        # If a new password is provided, hash it. Otherwise, keep the existing hashed password. Then update the employee record in the database with the new username and hashed password
-        if emp.password:
-            hashed_password = pwd_context.hash(emp.password)
-        else:
-            hashed_password = existing_employee["password"]   # Keep existing hashed password if no new password is provided          
-        query = employee.update().where(employee.c.name == employee_name).values(name=emp.username, password=hashed_password)       # Update the employee record in the database with the new username and hashed password
-        await database.execute(query)
 
-        return {"message": "Employee updated successfully"}
-
-    # Catch any exceptions that occur during the update process and return a 500 error with the exception message
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-
+# ✅ DELETE EMPLOYEE
 @app.delete("/employees/{employee_name}")
-async def delete_employee(employee_name: str):
-    try:
-        # Fetch the employee record from the database based on the provided name
-        query = employee.select().where(employee.c.name == employee_name)
-        existing_employee = await database.fetch_one(query)
-
-        if not existing_employee:
-            raise HTTPException(status_code=404, detail="Employee not found")
-
-        # If the employee exists, delete the record from the database and return a success message
-        query = employee.delete().where(employee.c.name == employee_name)     # Delete the employee record from the database where name matches the provided employee_name
-        await database.execute(query)
-        return {"message": "Employee deleted successfully"}
-
-    # Catch any exceptions that occur during the deletion process and return a 500 error with the exception message
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def delete_employee(employee_name: str, db: Session = Depends(get_db)):
+    employee = db.query(Employee).filter(Employee.name == employee_name).first()
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+    db.delete(employee)
+    db.commit()
+    return {"message": "Employee deleted successfully"}

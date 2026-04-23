@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from contextlib import asynccontextmanager
 
 from db import get_db, engine, Base
-from models import UserDB   
+from models import User   
 from schemas import UserCreate, UserResponse
 
 
@@ -35,7 +35,7 @@ app = FastAPI(lifespan=lifespan)
 @app.post("/users", response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     
-    new_user = UserDB(name=user.name, age=user.age)  # create object
+    new_user = User(name=user.name, age=user.age)  # create object
 
     db.add(new_user)     # add to DB
     db.commit()          # save changes
@@ -49,7 +49,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 # ------------------------------
 @app.get("/users", response_model=list[UserResponse])
 def get_users(db: Session = Depends(get_db)):
-    return db.query(UserDB).all()
+    return db.query(User).all()
 
 
 # ------------------------------
@@ -58,7 +58,7 @@ def get_users(db: Session = Depends(get_db)):
 @app.get("/users/{user_id}", response_model=UserResponse)
 def get_user(user_id: int, db: Session = Depends(get_db)):
     
-    user = db.query(UserDB).filter(UserDB.id == user_id).first()
+    user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -71,7 +71,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 @app.delete("/users/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     
-    user = db.query(UserDB).filter(UserDB.id == user_id).first()
+    user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker     # sessionmaker for creating a sessio
 # PostgreSQL URL
 # ------------------------------
 # Format:   postgresql://username:password@localhost:port/db_name
-DATABASE_URL = "postgresql://postgres:admin123@localhost:5432/FastAPI_DB"
+DATABASE_URL = "postgresql://postgres:admin123@localhost:5432/02_CRUD_POSTGRESQL"
 
 # ------------------------------
 # Create connection (engine)

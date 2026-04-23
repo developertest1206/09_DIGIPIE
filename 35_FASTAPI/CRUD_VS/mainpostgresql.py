@@ -1,103 +1,109 @@
+# ------------------ IMPORTS ------------------
 from fastapi import FastAPI, HTTPException
 from contextlib import asynccontextmanager
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 from typing import Optional, List
 
-# ------------------ Database URL ------------------
-# This is PostgreSQL connection (just like SQLite file, but here it's a server DB)
-# Format: postgresql://username:password@host:port/database_name
-PostgreSQL_DB_URL = "postgresql://postgres:admin123@localhost:5432/FastAPI_DB"
+
+# ------------------ DATABASE URL ------------------
+# Format: postgresql://username:password@host:port/database
+DATABASE_URL = "postgresql://postgres:admin123@localhost:5432/CRUD_VS"
 
 
-# ------------------ Model ------------------
-# This class = table in database (same like SQLite table)
-class mainpostgresql(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)  # id is primary key and auto increases
-    name: str        # user name (required)
-    email: str       # user email (required)
-    is_active: bool = False   # default value is False
+# ------------------ MODEL (TABLE) ------------------
+# This class will create a table in PostgreSQL
+class mainpostgresql_user(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)  # Auto ID
+    name: str        # User name
+    email: str       # User email
+    is_active: bool = False   # Default = False
 
 
-# ------------------ Database Connection ------------------
-# This connects your FastAPI app to PostgreSQL database
-engine = create_engine(PostgreSQL_DB_URL, echo=True)
+# ------------------ DATABASE CONNECTION ------------------
+engine = create_engine(DATABASE_URL, echo=True)
 
 
-# ------------------ Create Table ------------------
-# This will automatically create table in DB if not exists
+# ------------------ CREATE TABLE ------------------
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
 
-# ------------------ Lifespan ------------------
-# This runs when FastAPI app starts
+# ------------------ APP STARTUP ------------------
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_db_and_tables()   # create table
+    create_db_and_tables()   # Create table when app starts
     yield
 
 
-# ------------------ App ------------------
+# ------------------ FASTAPI APP ------------------
 app = FastAPI(lifespan=lifespan)
 
 
-# ------------------ Routes ------------------
+# =========================================================
+# ===================== ROUTES =============================
+# =========================================================
 
-# ✅ GET ALL User (GET)
-@app.get("/user/", response_model=List[mainpostgresql])
-def read_user():
+# ✅ GET ALL USERS
+@app.get("/user/", response_model=List[mainpostgresql_user])
+def get_all_users():
     with Session(engine) as session:
-        user = session.exec(select(mainpostgresql)).all()  # get all data
-        return user
+        users = session.exec(select(mainpostgresql_user)).all()
+        return users
 
-# ✅ GET User BY ID
-@app.get("/user/{user_id}", response_model=mainpostgresql)
-def read_user(user_id: int):
-    with Session(engine) as session:
-        user = session.get(mainpostgresql, user_id)  # find mainpostgresql by id
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-        return user
 
-# ✅ CREATE User (POST)
-@app.post("/user/", response_model=mainpostgresql)
-def create_item(user: mainpostgresql):
+# ✅ GET USER BY ID
+@app.get("/user/{user_id}", response_model=mainpostgresql_user)
+def get_user_by_id(user_id: int):
     with Session(engine) as session:
-        session.add(user)     # add data to DB
-        session.commit()      # save changes
-        session.refresh(user) # get updated data (id etc.)
-        return user
+        user = session.get(mainpostgresql_user, user_id)
 
-# ✅ UPDATE User (PUT)
-@app.put("/user/{user_id}", response_model=mainpostgresql)
-def update_item(user_id: int, updated_user: mainpostgresql):
-    with Session(engine) as session:
-        user = session.get(mainpostgresql, user_id)  # find user
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        # update values
+        return user
+
+
+# ✅ CREATE USER
+@app.post("/user/", response_model=mainpostgresql_user)
+def create_user(user: mainpostgresql_user):
+    with Session(engine) as session:
+        session.add(user)      # Add data
+        session.commit()       # Save to DB
+        session.refresh(user)  # Get updated data (like ID)
+        return user
+
+
+# ✅ UPDATE USER
+@app.put("/user/{user_id}", response_model=mainpostgresql_user)
+def update_user(user_id: int, updated_user: mainpostgresql_user):
+    with Session(engine) as session:
+        user = session.get(mainpostgresql_user, user_id)
+
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Update values
         user.name = updated_user.name
         user.email = updated_user.email
         user.is_active = updated_user.is_active
 
-        session.add(user)     # save updated data
+        session.add(user)
         session.commit()
         session.refresh(user)
 
         return user
 
 
-# ✅ DELETE User
+# ✅ DELETE USER
 @app.delete("/user/{user_id}")
-def delete_item(user_id: int):
+def delete_user(user_id: int):
     with Session(engine) as session:
-        user = session.get(user, user_id)  # find user
+        user = session.get(mainpostgresql_user, user_id)
 
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        session.delete(user)   # delete from DB
+        session.delete(user)
         session.commit()
 
         return {"message": "User deleted successfully"}

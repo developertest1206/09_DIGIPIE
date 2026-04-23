@@ -6,7 +6,7 @@ from typing import Optional, List
 # ------------------ DATABASE URL ------------------
 # Format: mysql+pymysql://username:password@host:port/database_name
 
-DATABASE_URL = "mysql+pymysql://root:root@localhost:3306/FastAPI_DB"
+DATABASE_URL = "mysql+pymysql://root:root@localhost:3306/CRUD_VS"
 # 👉 Make sure:
 # - MySQL is running
 # - Database "FastAPI_DB" already created in MySQL Workbench
