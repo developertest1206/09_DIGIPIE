@@ -3,21 +3,20 @@ Uvicorn: https://uvicorn.dev/
 Pydentic: https://pydantic.dev/docs/validation/latest/get-started/
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+CMD: pip install passlib bcrypt==3.2.2 aiomysql mysqlclient pymysql psycopg2 databases sqlalchemy python-multipart pytest httpx python-jose jinja2 pymongo django djangorestframework djangorestframework-simplejwt pillow faker mysqlclient
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 fastapi-crud/
 │
-├── main.py              # Entry point (start app)
-├── database.py          # Fake DB / later real DB
-├── schemas.py           # Request & Response models
+├── main.py			# Start app
+├── database.py		# DB connection
+├── models.py			# Tables
+├── schemas.py			# Validation
 │
-├── routers/             # All API routes
-│   └── user.py
-│
-└── services/            # Business logic (important!)
-    └── user_service.py
-
-Rule:
-Router = request handle
-Service = logic handle
+└── routers/			# APIs		
+    ├── users.py
+    ├── books.py
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 run .py file : uvicorn FileName:app --reload
@@ -102,44 +101,13 @@ convert all venv library file in one file
 
 
 
-🟢 5. Path & Query Parameters
-Path parameter (/users/{id})
-Query parameter (?name=abc)
-Optional parameters
-🟢 6. Request Body (Pydantic)
-What is Pydantic
-Create schema using BaseModel
-Data validation
-Input JSON
-🟢 7. Response Model
-Return data using schema
-response_model
-Hide sensitive data (like password)
-🟢 8. Status Codes
-200, 201, 400, 404, 500
-Custom status codes
-🟢 9. Error Handling
-HTTPException
-Custom error messages
-Validation errors
-🟢 10. Project Structure
-main.py
-routers/
-models.py
-schemas.py
-database.py
-🟢 11. APIRouter
-Split code into files
-Use router
-Include in main.py
-🟢 12. Dependency Injection
-Depends()
-get_db()
-Reusable logic
-🟢 13. Database Connection
-SQLAlchemy basics
-engine, Session, Base
-Connect PostgreSQL / SQLite
+
+
+
+
+
+
+
 🟢 14. Models (ORM)
 Create tables
 Columns
