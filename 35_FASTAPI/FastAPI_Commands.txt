@@ -99,6 +99,12 @@ convert all venv library file in one file
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+PowerShell:
+
+py --version
+	Python 3.11.9
+py -0p
+ 	-V:3.11 *        C:\Users\os\AppData\Local\Programs\Python\Python311\python.exe
 
 
 
@@ -107,35 +113,11 @@ convert all venv library file in one file
 
 
 
-
-🟢 14. Models (ORM)
-Create tables
-Columns
-Data types
-🟢 15. Schemas
-Input schema
-Output schema
-orm_mode
-🟢 16. CRUD Operations 🔥
-Create
-Read
-Update
-Delete
-🟢 17. Middleware
-What is middleware
-Logging
-Request/response control
+👉 Refresh Token (Advanced JWT)
+👉 Role-based authentication (Admin/User)
 🟢 18. CORS
 Why needed
 Connect frontend
-🟢 19. Authentication (IMPORTANT 🔐)
-Basic login
-Password hashing
-JWT token
-🟢 20. Security
-Hash passwords
-Protect routes
-Token validation
 🟢 21. File Upload
 Upload files
 Save files
