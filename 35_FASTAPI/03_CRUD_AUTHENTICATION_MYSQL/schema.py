@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel      # BaseModel is used to define data structure
 
 # Used when creating new employee
 class Employee(BaseModel):
@@ -8,8 +8,8 @@ class Employee(BaseModel):
 
 # Used when login
 class EmployeeLogin(BaseModel):
-    username: str
-    password: str
+    username: str   # input username
+    password: str   # input password
 
 # Used when updating employee information
 class EmployeeUpdate(BaseModel):

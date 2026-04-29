@@ -1,19 +1,23 @@
+# BaseModel is used to define data structure
 from pydantic import BaseModel          
 
 # ------------------------------
-# Request (POST / PUT)
+# Request (data coming from user)
 # ------------------------------
+# This is used when creating or updating user
 class UserCreate(BaseModel):
-    name: str
-    age: int
+    name: str   # user name
+    age: int    # user age
+
 
 # ------------------------------
-# Response (GET)
+# Response (data going to user)
 # ------------------------------
+# This is what API sends back
 class UserResponse(BaseModel):
-    id: int
-    name: str
-    age: int
+    id: int     # user id
+    name: str   # user name
+    age: int    # user age
 
     class Config:
-        orm_mode = True
+        orm_mode = True   # Allows reading data from database object

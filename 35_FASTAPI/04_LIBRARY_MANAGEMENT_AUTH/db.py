@@ -1,44 +1,37 @@
-# -----------------------------------------
-# IMPORTS
-# -----------------------------------------
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+# create_engine for creating a connection to the database
+from sqlalchemy import create_engine  
+      
+# sessionmaker for creating a session factory to interact with the database and from sqlalchemy.ext.declarative import declarative_base     # declarative_base for creating a base class for our models 
+from sqlalchemy.orm import sessionmaker, declarative_base   
 
-# -----------------------------------------
-# DATABASE CONNECTION URL
-# -----------------------------------------
+
+# ------------------------------DATABASE CONNECTION URL------------------------------
 # Format: mysql+pymysql://username:password@host:port/database_name
 DATABASE_URL = "mysql+pymysql://root:root@localhost:3306/04_LIBRARY_MANAGEMENT_AUTH"
 
-# -----------------------------------------
-# CREATE ENGINE: Connects to db like "bridge" between app & DB
-# -----------------------------------------
+
+# ------------------------------Create connection (engine)------------------------------
 engine = create_engine(
     DATABASE_URL,
     echo=True       # Shows SQL queries in terminal (for learning/debug)
 )
 
-# -----------------------------------------
-# SESSION: Used to perform db operations like -insert, update, delete, select
-# -----------------------------------------
+# ------------------------------Create session factory------------------------------
 SessionLocal = sessionmaker(
-    autocommit=False,   # we manually save changes
-    autoflush=False,    # no auto-save before query
-    bind=engine         # connect session with database
+    autocommit=False,   # we will manually commit
+    autoflush=False,    # no auto save before query
+    bind=engine         # connect with database
 )
 
-# -----------------------------------------
-# BASE CLASS: Parent Class for all Tables/Models. All models inherit from this
-# -----------------------------------------
-Base = declarative_base()
 
-# -----------------------------------------
-# DEPENDENCY (VERY IMPORTANT)
-# -----------------------------------------
+# ------------------------------Base class for models------------------------------
+Base = declarative_base()       # declarative_base() is a factory function that constructs a base class for declarative class definitions. This base class maintains a catalog of classes and tables relative to that base, which is used by the ORM to map classes to database tables.
+
+
+# ------------------------------Dependency (used in APIs)------------------------------
 def get_db():
-    db = SessionLocal()   # create DB session
-
+    db = SessionLocal()   # create new DB session
     try:
-        yield db          # give DB to API
+        yield db          # give session to API
     finally:
         db.close()        # close after request

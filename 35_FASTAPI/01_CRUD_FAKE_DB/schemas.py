@@ -1,18 +1,24 @@
-# pydantic models for request validation and response formatting
+# These models are used to control what data comes in and goes out of API
 from pydantic import BaseModel, EmailStr
 
-# Data from client (POST)
+
+# -------- CREATE USER (INPUT) --------
+# This is the data we expect from user when creating new user
 class UserCreate(BaseModel):
-    name: str
-    email: EmailStr
+    name: str                 # user name
+    email: EmailStr           # user email (must be valid email format)
 
-# Response data
+
+# -------- RESPONSE (OUTPUT) --------
+# This is the data we send back to client after processing
 class UserResponse(BaseModel):
-    id: int
-    name: str
-    email: EmailStr
+    id: int                   # user id
+    name: str                 # user name
+    email: EmailStr           # user email
 
-# Data for update (PUT)
+
+# -------- UPDATE USER --------
+# This is the data used when updating user details
 class UserUpdate(BaseModel):
-    name: str
-    email: EmailStr
+    name: str                 # updated name
+    email: EmailStr           # updated email
