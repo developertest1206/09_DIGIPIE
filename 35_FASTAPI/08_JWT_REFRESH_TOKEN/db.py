@@ -1,7 +1,7 @@
 # create_engine for creating a connection to the database
 from sqlalchemy import create_engine  
-      
-# sessionmaker for creating a session factory to interact with the database and from sqlalchemy.ext.declarative import declarative_base     # declarative_base for creating a base class for our models 
+
+# sessionmaker for creating a session factory to interact with the database and declarative_base for creating a base class for our models 
 from sqlalchemy.orm import sessionmaker, declarative_base       
 
 

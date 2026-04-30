@@ -1,6 +1,5 @@
 # Import BaseModel to create data structure (like a form)
 from pydantic import BaseModel
-from typing import List
 
 # ---------------- USER CREATE ----------------
 # This is used when creating a new user (input from user)

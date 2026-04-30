@@ -29,11 +29,10 @@ def verify_password(plain, hased):
 
 
 # -------- TOKEN CREATION --------
-
 # This function creates a token (like a login pass)
 def create_token(data:dict):
     to_encode = data.copy()                              # Copy user data (example: username) into new variable (don't change original data)
-    expire = datetime.now() + timedelta(minutes=30)      # Set expiry time (token valid for 30 minutes)
+    expire = datetime.utcnow() + timedelta(minutes=30)      # Set expiry time (token valid for 30 minutes)
     to_encode.update({"exp" : expire})                   # Add expiry time into data (so we can check it later when user sends token)
     token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)  #create token using user data, secret key and algorithm
     return token                               # Return the created token to user (so they can use it in future requests)              
@@ -41,7 +40,6 @@ def create_token(data:dict):
 
 
 # -------- TOKEN VERIFY --------
-
 # This function checks if token is valid or not (not fake, not expired)
 def verify_token(token : str):
     try:
