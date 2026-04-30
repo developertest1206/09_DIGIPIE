@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, Header
 
-
 # -------- GET CURRENT EMPLOYEE --------
 # This function gets current employee info from request header 
 
