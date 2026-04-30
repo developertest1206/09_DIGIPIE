@@ -94,8 +94,26 @@ SUCCESS: The process with PID 14228 has been terminated.
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+Create Virtual Environment
+	py -m venv myenv
+
+Activate Virtual Environment
+	\myenv\Scripts\Activate.ps1
+
 convert all venv library file in one file
 	pip freeze > requirements.txt
+
+Download all libraries in requirements.txt
+	pip install -r requirements.txt
+
+If you install something new:
+	pip install requests
+
+Then update the file again:
+	pip freeze > requirements.txt
+
+Delete Virtual Environment
+	Remove-Item -Recurse -Force myenv
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
