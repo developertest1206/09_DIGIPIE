@@ -131,19 +131,37 @@ py -0p
 
 
 
-👉 Refresh Token (Advanced JWT)
-👉 Role-based authentication (Admin/User)
-🟢 18. CORS
-Why needed
-Connect frontend
-🟢 21. File Upload
-Upload files
-Save files
-🟢 22. Background Tasks
-Run tasks in background
-🟢 23. Testing API
-Swagger UI (/docs)
-Postman
-🟢 24. Deployment (Basic)
-Run on server
-Use Docker (optional)
+
+🟡 Intermediate
+
+Form data & file uploads
+Headers & cookies
+Multiple dependencies
+Alembic — database migrations
+Environment variables — python-dotenv
+CORS middleware
+Custom middleware
+Background tasks
+Static files & Jinja2 templates
+
+
+🔴 Advanced
+
+OAuth2 with Google / GitHub
+WebSockets — real-time communication
+Server-Sent Events (SSE)
+Async programming — async/await
+Async database — SQLAlchemy async / Tortoise ORM
+Redis caching
+Celery — background task queue
+Rate limiting
+API versioning
+Pagination & filtering
+Custom response types — StreamingResponse, FileResponse
+Testing — pytest + TestClient
+
+
+🟢 Practical / Deployment
+
+Swagger UI & Postman — testing APIs
+Deployment — run on server + Docker

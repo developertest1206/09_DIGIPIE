@@ -2,9 +2,12 @@ from fastapi import FastAPI, Depends, HTTPException, Header
 
 
 # -------- GET CURRENT EMPLOYEE --------
-# This function gets current employee info from request header (in real life we would use token instead of header for security but this is just a simple example)
-def get_current_employee(role: str = Header(...)):
-    
+# This function gets current employee info from request header 
+
+# role: str means string values from header will be stored in variable "role". Header(...) → tells FastAPI: “Get this value from the HTTP request headers” and ... (Ellipsis) Means: this field is required
+def get_current_employee(role: str = Header(...)):      
+
+
     # In real life, we would decode the token to get employee info and role, but here we just take role from header for simplicity 
     return {"role": role}
      
