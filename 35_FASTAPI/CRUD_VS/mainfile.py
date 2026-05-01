@@ -13,6 +13,14 @@ UPLOAD_FOLDER = "mainfile"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
+
+# -------------------- GET STRING --------------------
+# Simple test API. When you open http://127.0.0.1:8000/ in browser, it will show this message
+@app.get("/")
+def home_get():
+    return {"message" : "Welcome to FastAPI!"}
+
+
 # -------------------- UPLOAD SINGLE FILE --------------------
 @app.post("/upload")
 # file: UploadFile means user will upload a file. File(...) means file is required
@@ -106,16 +114,6 @@ def file_info(filename: str):
 
 
 
-# -------------------- FILE INFO API --------------------
-@app.post("/file-info")
-# This API does not save file, only shows information
-async def file_info(file: UploadFile = File(...)):
-    return {
-        "file_name": file.filename,        # Name of file
-        "file_type": file.content_type     # Type of file (example: image/png, text/plain)
-    }
-
-
 
 
 
@@ -147,4 +145,23 @@ async def file_info(file: UploadFile = File(...)):
 #         "files" : saved_files
 #     }
     
+from fastapi import UploadFile, File
+from typing import List
 
+@app.post("/upload-multiple")
+async def upload_multiple(files: List[UploadFile] = File(..., media_type="multipart/form-data")):
+    saved_files = []
+
+    for file in files:
+        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+
+        with open(file_path, "wb") as f:
+            while chunk := await file.read(1024):
+                f.write(chunk)
+
+        saved_files.append(file.filename)
+
+    return {
+        "message": "Multiple files uploaded",
+        "files": saved_files
+    }
