@@ -1,0 +1,167 @@
+FastAPI Documentation: https://fastapi.tiangolo.com/
+Uvicorn: https://uvicorn.dev/
+Pydentic: https://pydantic.dev/docs/validation/latest/get-started/
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CMD: pip install passlib bcrypt==3.2.2 aiomysql mysqlclient pymysql psycopg2 databases sqlalchemy python-multipart pytest httpx python-jose jinja2 pymongo django djangorestframework djangorestframework-simplejwt pillow faker mysqlclient
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+fastapi-crud/
+│
+├── main.py			# Start app
+├── database.py		# DB connection
+├── models.py			# Tables
+├── schemas.py			# Validation
+│
+└── routers/			# APIs		
+    ├── users.py
+    ├── books.py
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+run .py file : uvicorn FileName:app --reload
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PostgreSQL Installation Directory: C:\Program Files\PostgreSQL\18
+PostgreSQL Data Directory: C:\Program Files\PostgreSQL\18\data
+User: postgres
+Password: admin123
+Port: 5432
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+MySQL Installation Directory: C:\ProgramDC:\ProgramData\MySQL\MySQL Server 8.0
+Port: 3306
+Password: root
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+When ever port is not worked than do this:
+
+(myenv) PS D:\09_DIGIPIE\35_FASTAPI\CRUD_VS> netstat -ano | findstr :8000
+  TCP    127.0.0.1:8000         0.0.0.0:0              LISTENING       12504
+  TCP    127.0.0.1:8000         127.0.0.1:60157        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60158        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60174        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60175        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60177        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60178        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60183        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60184        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60186        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60198        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60199        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60239        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60240        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60247        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60248        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60261        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60262        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60263        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60266        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60267        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60272        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60273        CLOSE_WAIT      12504
+  TCP    127.0.0.1:8000         127.0.0.1:60294        CLOSE_WAIT      12504
+  TCP    127.0.0.1:60157        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60158        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60174        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60175        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60177        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60178        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60183        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60184        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60186        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60198        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60199        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60239        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60240        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60247        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60248        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60261        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60262        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60263        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60266        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60267        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60272        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60273        127.0.0.1:8000         FIN_WAIT_2      14228
+  TCP    127.0.0.1:60294        127.0.0.1:8000         FIN_WAIT_2      14228
+(myenv) PS D:\09_DIGIPIE\35_FASTAPI\CRUD_VS> taskkill /PID 12504 /F
+SUCCESS: The process with PID 12504 has been terminated.
+(myenv) PS D:\09_DIGIPIE\35_FASTAPI\CRUD_VS> taskkill /PID 14228 /F
+SUCCESS: The process with PID 14228 has been terminated.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Create Virtual Environment
+	py -m venv myenv
+
+Activate Virtual Environment
+	\myenv\Scripts\Activate.ps1
+
+convert all venv library file in one file
+	pip freeze > requirements.txt
+
+Download all libraries in requirements.txt
+	pip install -r requirements.txt
+
+If you install something new:
+	pip install requests
+
+Then update the file again:
+	pip freeze > requirements.txt
+
+Delete Virtual Environment
+	Remove-Item -Recurse -Force myenv
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PowerShell:
+
+py --version
+	Python 3.11.9
+py -0p
+ 	-V:3.11 *        C:\Users\os\AppData\Local\Programs\Python\Python311\python.exe
+
+
+
+
+
+
+
+
+
+🟡 Intermediate
+
+Form data & file uploads
+Headers & cookies
+Multiple dependencies
+Alembic — database migrations
+Environment variables — python-dotenv
+CORS middleware
+Custom middleware
+Background tasks
+Static files & Jinja2 templates
+
+
+🔴 Advanced
+
+OAuth2 with Google / GitHub
+WebSockets — real-time communication
+Server-Sent Events (SSE)
+Async programming — async/await
+Async database — SQLAlchemy async / Tortoise ORM
+Redis caching
+Celery — background task queue
+Rate limiting
+API versioning
+Pagination & filtering
+Custom response types — StreamingResponse, FileResponse
+Testing — pytest + TestClient
+
+
+🟢 Practical / Deployment
+
+Swagger UI & Postman — testing APIs
+Deployment — run on server + Docker
