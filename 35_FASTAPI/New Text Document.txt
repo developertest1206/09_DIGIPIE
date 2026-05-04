@@ -1,0 +1,104 @@
+db.py:
+# create_engine for creating a connection to the database
+from sqlalchemy import create_engine  
+      
+# sessionmaker for creating a session factory to interact with the database and from sqlalchemy.ext.declarative import declarative_base     # declarative_base for creating a base class for our models 
+from sqlalchemy.orm import sessionmaker, declarative_base   
+
+
+# ------------------------------PostgreSQL URL------------------------------
+# Format:   postgresql://username:password@localhost:port/db_name
+DATABASE_URL = "postgresql://postgres:admin123@localhost:5432/02_CRUD_POSTGRESQL"
+
+# ------------------------------Create connection (engine)------------------------------
+engine = create_engine(DATABASE_URL)
+
+# ------------------------------Create session factory------------------------------
+SessionLocal = sessionmaker(
+    autocommit=False,   # we will manually commit
+    autoflush=False,    # no auto save before query
+    bind=engine         # connect with database
+)
+
+
+# ------------------------------Base class for models------------------------------
+Base = declarative_base()       # declarative_base() is a factory function that constructs a base class for declarative class definitions. This base class maintains a catalog of classes and tables relative to that base, which is used by the ORM to map classes to database tables.
+
+
+# ------------------------------Dependency (used in APIs)------------------------------
+def get_db():
+    db = SessionLocal()   # create new DB session
+    try:
+        yield db          # give session to API
+    finally:
+        db.close()        # close after request
+
+model.py:
+from sqlalchemy import Column, Integer, String, Table, ForeignKey
+from sqlalchemy.orm import relationship
+from db import Base
+
+
+# ---------------- MANY-TO-MANY TABLE ----------------
+# This is a helper table to connect students and courses
+# One student can have many courses
+# One course can have many students
+student_course = Table(
+    "student_course",                               # table name
+    Base.metadata,                                  # attach to database
+    Column("student_id", Integer, ForeignKey("students.id")),       # store student id
+    Column("course_id", Integer, ForeignKey("courses.id"))          # store course id
+)
+
+
+# ---------------- USER TABLE ----------------
+class User(Base):
+    __tablename__ = "users"   # table name
+
+    id = Column(Integer, primary_key=True, index=True)   # unique id
+    email = Column(String, unique=True)                  # user email (must be unique)
+    password = Column(String)                            # user password
+
+    # One user has one student profile
+    # uselist=False means one-to-one relationship
+    student = relationship("Student", back_populates="user", uselist=False)
+
+# ---------------- STUDENT TABLE ----------------
+class Student(Base):
+    __tablename__ = "students"   # table name
+
+    id = Column(Integer, primary_key=True, index=True)   # unique id
+    name = Column(String)                                # student name
+    photo = Column(String)                               # photo file name stored as text
+    user_id = Column(Integer, ForeignKey("users.id"))    # store user id (foreign key) this connects student to user table
+
+    # relationship with User table
+    # this allows access like: student.user
+    user = relationship("User", back_populates="student")
+
+    # Many-to-many relationship with Course
+    # one student can have multiple courses
+    courses = relationship(
+        "Course",                    # connect to Course table
+        secondary=student_course,    # use helper table
+        back_populates="student"     # reverse connection
+    )
+
+# ---------------- COURSE TABLE ----------------
+class Course(Base):
+    __tablename__ = "courses"   # table name
+
+    id = Column(Integer, primary_key=True, index=True)   # unique id
+    name = Column(String)                                # course name
+
+    # Many-to-many relationship with Student
+    # one course can have many students
+    students = relationship(
+        "Student",                 # connect to Student table
+        secondary=student_course,  # use helper table
+        back_populates="course"    # reverse connection
+    )
+
+
+
+in your given project i want to use form , file, auth, access and refresh token, frontend, backend to store data , admin , 
