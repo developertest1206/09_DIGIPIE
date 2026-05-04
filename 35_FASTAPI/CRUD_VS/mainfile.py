@@ -3,7 +3,7 @@ from fastapi.responses import FileResponse               # Import FileResponse t
 import os         # os to work with folder and file paths
 app= FastAPI()     # Create FastAPI app
 
-from typing import List
+from typing import List, Annotated
 
 
 # Create a folder named "mainfile" to store uploaded files. 
@@ -121,47 +121,26 @@ def file_info(filename: str):
 
 
 # # -------------------- UPLOAD MULTIPLE FILES --------------------
-# @app.post("/upload-multiple")
-# # files: list means user can upload multiple files at once
-# async def upload_multiple(files: list[UploadFile] = File(...)):
-
-#     # List to store saved file names
-#     saved_files = []
-
-#     for file in files:
-#         # Create file path for each file
-#         file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-
-#         # Open file and save it
-#         with open(file_path, "wb") as f:
-#             while chunk := await file.read(1024):
-#                 f.write(chunk)
-
-#         saved_files.append(file.filename)   # Save file name in list
-
-#         # IMPORTANT: return should be outside loop (after all files saved)
-#     return {
-#         "message" : "Multiple files uploaded",
-#         "files" : saved_files
-#     }
-    
-from fastapi import UploadFile, File
-from typing import List
-
 @app.post("/upload-multiple")
-async def upload_multiple(files: List[UploadFile] = File(..., media_type="multipart/form-data")):
+# files: list means user can upload multiple files at once
+async def upload_multiple(files: list[UploadFile] = File(...)):
+
+    # List to store saved file names
     saved_files = []
 
     for file in files:
+        # Create file path for each file
         file_path = os.path.join(UPLOAD_FOLDER, file.filename)
 
+        # Open file and save it
         with open(file_path, "wb") as f:
             while chunk := await file.read(1024):
                 f.write(chunk)
 
-        saved_files.append(file.filename)
+        saved_files.append(file.filename)   # Save file name in list
 
+        # IMPORTANT: return should be outside loop (after all files saved)
     return {
-        "message": "Multiple files uploaded",
-        "files": saved_files
+        "message" : "Multiple files uploaded",
+        "files" : saved_files
     }
