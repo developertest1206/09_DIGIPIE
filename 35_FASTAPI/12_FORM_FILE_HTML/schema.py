@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+
+# This is used to control what data API returns
 class StudentOut(BaseModel):
     id: int
     name: str
