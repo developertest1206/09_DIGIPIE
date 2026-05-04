@@ -134,10 +134,8 @@ py -0p
 
 🟡 Intermediate
 
-Headers & cookies
 Multiple dependencies
 Alembic — database migrations
-Environment variables — python-dotenv
 CORS middleware
 Custom middleware
 Background tasks
