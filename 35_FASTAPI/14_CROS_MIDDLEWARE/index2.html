@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- Set character type -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Mobile responsive -->
+    <title>CORS Secure Project</title>
+</head>
+<body>
+
+    <h2>Student API</h2>
+
+    <!-- Button to call GET API -->
+    <button onclick="getStudents()">Get Students</button>
+
+    <!-- Button to call POST API -->
+    <button onclick="addStudent()">Add Student</button>
+
+    <!-- Show result here -->
+    <p id="result"></p>
+
+    <script>
+        // ---------------- GET STUDENTS ----------------
+        function getStudents() {
+
+            // Call backend API
+            fetch("http://127.0.0.1:8000/students")
+
+            // Convert response to JSON
+            .then(res => res.json())
+
+            // Show result in browser
+            .then(data => {
+                document.getElementById("result").innerText = JSON.stringify(data);
+            });
+        }
+
+        // ---------------- ADD STUDENT ----------------
+        function addStudent() {
+
+            // Call POST API
+            fetch("http://127.0.0.1:8000/add-student?name=Sejal", {
+                method: "POST",
+
+                // Send headers (important for security)
+                headers: {
+                    "Authorization": "Bearer mytoken123",   // token for authentication
+                    "Content-Type": "application/json"      // data type
+                }
+            })
+
+            // Convert response to JSON
+            .then(res => res.json())
+
+            // Show result
+            .then(data => {
+                document.getElementById("result").innerText = JSON.stringify(data);
+            })
+
+            // If error occurs
+            .catch(err => console.log(err));
+        }
+    </script>
+
+</body>
+</html>
