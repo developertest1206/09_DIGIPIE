@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Test</title>
+</head>
+<body>
+
+    <h2>Call FastAPI API</h2>
+
+    <!-- This creates a button. When the user clicks it, the function 'callAPI()' will run -->
+    <button onclick="callAPI()">Get Data</button>
+    
+    <p id="result"></p>   <!-- This is an empty paragraph where we will show the result from the API -->
+
+    <script>
+        // This section contains JavaScript code
+
+        // This function runs when the button is clicked
+        function callAPI() {      
+            
+            // This sends a request to your FastAPI backend.   It is asking: "Give me data from this URL"
+            fetch("http://127.0.0.1:8000/data")
+
+            // When the server replies, this converts the response into JSON format
+            // JSON is a simple way to send data like key-value pairs
+            .then(response => response.json())
+
+            // After converting, we get the actual data here
+            .then(data => {
+
+                // This finds the paragraph with id="result". Then it puts the message received from the API inside it
+                document.getElementById("result").innerText = data.message;
+            })
+
+            // If something goes wrong (like server not running or CORS error)
+            .catch(error => {
+
+                // This prints the error in the browser console for debugging
+                console.log("Error:", error);
+            });
+
+        }
+    </script>
+
+</body>
+</html>
